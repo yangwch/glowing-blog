@@ -1,0 +1,55 @@
+<div ng-app="myApp">
+<form ng-controller="fCtrl" name="loginForm" ng-submit="submitForm(loginForm.$valid)" class="form-horizontal" method="post" novalidate>
+	<fieldset>
+		<legend>登录</legend>
+		<div class="form-group">
+			<label class="col-md-1 control-label" for="username">用户名</label>
+			<div class="col-md-4 form-field">
+				<input type="text" class="form-control" required ng-minlength="4" ng-maxlength="20" ng-model="user.username" id="username" name="username">
+				<div class="error" ng-show="loginForm.username.$dirty && loginForm.username.$invalid &&  !loginForm.username.$focused">
+					<small class="error" ng-show="loginForm.username.$error.required">请输入用户名</small> 
+					<small class="error" ng-show="loginForm.username.$error.minlength">最小长度为5</small>
+					<small class="error" ng-show="loginForm.username.$error.maxlength">最大长度为20</small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-1 control-label" for="password">口令</label>
+			<div class="col-md-4 form-field">
+				<input type="password" class="form-control" required ng-model="user.password" id="password" name="password">
+				<div class="error" ng-show="loginForm.password.$dirty && loginForm.password.$invalid && !loginForm.username.$focused">
+					<small class="error" ng-show="loginForm.password.$error.required">请输入密码</small>
+				</div>
+			</div>
+		</div>
+		<div class="form-actions col-md-offset-1">
+			<button type="submit" class="btn btn-primary">登录</button>
+			<a href='/reg' class='btn btn-default'>注册</a>
+		</div>
+	</fieldset>
+</form>
+	<!-- <div class="content">
+		<div ng-view></div>
+	</div>
+</div> -->
+
+<script type="text/javascript" src="/javascripts/angular.min.js"></script>
+<script type="text/javascript" src="/javascripts/angular-route.js"></script>
+<script type="text/javascript">
+	var app = angular.module("myApp", ['ngRoute']);
+	/*app.config(["$routeProvider",function($routeProvider){
+		$routeProvider.when("/",{
+			templateUrl:"/img/1.png"
+		}).when("/login",{
+			templateUrl:"/img/2.png"
+		});
+	}])*/
+	app.controller("fCtrl", function($scope){
+		$scope.user = {};
+		$scope.submitForm = function(valid){
+			if(valid){
+				loginForm.submit();
+			}
+		}
+	});
+</script>

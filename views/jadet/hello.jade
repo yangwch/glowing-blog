@@ -1,0 +1,9 @@
+extends layout
+
+block content
+	h1 hello #{name}
+	hr
+	h3 Welcom! #{content}
+	ul
+		-for (var x = 0; x < items.length; x++)
+			li=items[x]

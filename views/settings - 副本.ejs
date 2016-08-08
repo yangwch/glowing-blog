@@ -1,0 +1,154 @@
+
+
+<link href="/javascripts/imgareaselect/css/imgareaselect-default.css" media="screen" rel="stylesheet" type="text/css" >
+<style>  
+div.preview_div{overflow:hidden;margin:auto;}  
+div.p_photo_l{width:202px;height:152px;}  
+div.p_photo_m{width:52px;height:52px;}  
+div.p_photo_s{width:32px;height:32px;}
+#img_origin{max-width: 100%;}
+figcaption{text-align: center;margin:10px 0;}
+</style>  
+<!--主体内容开始-->  
+<article class="w">  
+    <div class="row clearfix">  
+        <aside class="col-md-3">
+            <div class="panel panel-default"> 
+            <div class="panel-heading">预览</div>
+            <div class="panel-body">
+            <figure>  
+                <div class='preview_div p_photo_m'><img src="/upload/Penguins.jpg" class="nophoto_m"/></div>  
+                <figcaption>50×50</figcaption>  
+            </figure>  
+            <figure>  
+                <div class='preview_div p_photo_s'><img src="/upload/Penguins.jpg" class="nophoto_s"/></div>  
+                <figcaption>30×30</figcaption>  
+            </figure>
+            </div>
+            </div>
+        </aside>  
+        <section class="col-md-9 upload">
+            <div class="panel panel-default">
+                <div class="panel-heading">选择头像区域 <span class="pl20px">请使用鼠标左键拖动的选择框，选择你想要的理想区域。</span>
+                </div>
+                <div class="panel-body"><img id='img_origin' src="/upload/Penguins.jpg"/> 
+                    <form id='coordinates_form' action="/profile/upload-photo/save" method="post">  
+                        <input type='hidden' name='x' class='x' value='0'/>  
+                        <input type='hidden' name='y' class='y' value='0'/>  
+                        <input type='hidden' name='w' class='w' value='282'/>  
+                        <input type='hidden' name='h' class='h' value='282'/>  
+                    </form>
+                </div>
+            </div>
+        </section> 
+    </div>  
+</article>
+<script type="text/javascript" src="/javascripts/imgareaselect/scripts/jquery.imgareaselect.pack.js?version=20120912"></script>  
+<!--主体内容结束-->  
+<script>  
+$(document).ready(function(){  
+    //构造imgAreaSelectApi  
+    imgAreaSelectApi = $('#img_origin').imgAreaSelect({  
+        persistent : true,  // true，选区以外点击不会启用一个新选区（只能移动/调整现有选区）  
+        instance : true,    // true，返回一个imgAreaSelect绑定到的图像的实例，可以使用api方法  
+        onSelectChange : preview,   // 改变选区时的回调函数  
+        show : true,    // 选区会显示  
+        handles : true, // true，调整手柄则会显示在选择区域内  
+        resizable : true,   // true， 选区面积可调整大小  
+        minWidth : Math.floor(400/4),   // 选取的最小宽度  
+        minHeight : Math.floor(400/4),  // 选取的最小高度  
+        aspectRatio : '400:400' // 选区的显示比率 400:300  
+    });  
+      
+    //加载时触发的默认选区  
+    $('#img_origin').load(function(){  
+        var form = $('#coordinates_form');  
+          
+        //获取 x、y、w、h的值  
+        var left = parseInt(form.children('.x').val());   
+        var top = parseInt(form.children('.y').val());  
+        var width = parseInt(form.children('.w').val());  
+        var height = parseInt(form.children('.h').val());  
+          
+        //imgAreaSelectApi 就是图像img_origin的实例 上边instance已解释  
+        //setSelection(),设置选区的坐标  
+        //update(),更新  
+        imgAreaSelectApi.setSelection(left, top, left+width, top+height);  
+        imgAreaSelectApi.update();  
+    });  
+      
+    //preview方法 img图片参数，selection选区参数  
+    function preview(img, selection){  
+        $('div.preview_div img').attr('src',"/upload/Penguins.jpg");  
+          
+        var form = $('#coordinates_form');  
+          
+        //重新设置x、y、w、h的值  
+        form.children('.x').val(selection.x1);  
+        form.children('.y').val(selection.y1);  
+        form.children('.w').val(selection.x2-selection.x1);  
+        form.children('.h').val(selection.y2-selection.y1);  
+          
+        //preview_photo() 左一的图片调整（与选区的图片显示一致）  
+        //preview_photo('p_photo_l', selection);  
+        //preview_icon() 左二，左三的图片调整  
+        //（与选区的图片显示一致，为何不用preview_photo()方法呢，因为左一的是长方形，左二左三是正方形）  
+        preview_icon('p_photo_m', selection);  
+        preview_icon('p_photo_s', selection);  
+    }  
+      
+    //preview_photo()方法 左一的图片调整（与选区的图片显示一致）  
+    //div_class是对应div的class  
+    function preview_photo(div_class, selection){  
+        var div = $('div.'+div_class);  
+          
+        //获取div的宽度与高度  
+        var width = div.outerWidth();  
+        var height = div.outerHeight();  
+          
+        //显示区域与选区图片比例 宽度之比，高度之比  
+        //获取比例的用处是：  
+        //当选区的图片大于显示区域时，要相应的缩写图片。  
+        //当选区的图片小于显示区域时，要相应的放大图片。  
+        //selection的宽高之比是4:3,div的宽高之比也是4:3   
+        //scaleX scaleY之比为1:1  
+        var scaleX = width/selection.width;  
+        var scaleY = height/selection.height;  
+          
+        //css 控制图片的缩放以及偏移量  
+        //width height 控制img区域的大小，如果只做他俩的限定可以实现图片的缩放  
+        //但是有一点缺陷，width height大于div的outerWidth outerHeight时，图片显示不完全  
+        //由此我们要引入偏移量 marginLeft marginTop 显示出来的就是局部缩放  
+        div.find('img').css({  
+            width : Math.round(scaleX * $('#img_origin').outerWidth())+'px',  
+            height : Math.round(scaleY * $('#img_origin').outerHeight())+'px',  
+            marginLeft : '-'+Math.round(scaleX * selection.x1)+'px',  
+            marginTop : '-'+Math.round(scaleY * selection.y1)+'px'  
+        });       
+    }  
+      
+    //preview_icon()方法 左二左三的图片调整 和preview_photo()相似 （我们这里要求的缩放的宽高之比1:1不是4:3）  
+    function preview_icon(div_class, selection){  
+        var div = $('div.'+div_class);  
+          
+        //获取div的宽度与高度 因为这里div的宽度和高度相同  
+        var height = div.outerWidth();  
+          
+        //获取显示区域与选区图片比例   
+        //这里因为显示区域的宽度和高度相同  
+        //根据显示区域与选区图片的 宽高之比是否一致。一致才能实现等比例缩放如上边的就是4:3与4:3  
+        //不能各取显示区域与选区图片 宽度之比 高度之比  
+        //这里我们取 高度之比，此值相度 宽度之比大  
+        var scaleY = height/selection.height;  
+          
+        //css 控制图片的缩放以及偏移量  
+        //这里左边偏移量舍弃了一部分(selection.width - selection.height)/2  
+        div.find('img').css({  
+            width : Math.round(scaleY * $('#img_origin').outerWidth())+'px',  
+            height : Math.round(scaleY * $('#img_origin').outerHeight())+'px',  
+            marginLeft : '-'+Math.round(scaleY * (selection.x1 + (selection.width - selection.height)/2))+'px',  
+            marginTop : '-'+Math.round(scaleY * selection.y1)+'px'  
+        });       
+    }
+});  
+</script>

@@ -1,0 +1,302 @@
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">日程</h4>
+      </div>
+      <div class="modal-body">
+        
+		<form id="add-event-form">
+			<input type="hidden" id="uuid" name="uuid">
+			<fieldset>
+				<div class="form-group">
+					<label>选择事件图标</label>
+					<div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons">
+						<label class="btn btn-default active">
+							<input type="radio" name="iconselect" id="icon-1" value="glyphicon-info-sign" checked>
+							<i class="glyphicon glyphicon-info-sign text-muted"></i> </label>
+						<label class="btn btn-default">
+							<input type="radio" name="iconselect" id="icon-2" value="glyphicon-warning-sign">
+							<i class="glyphicon glyphicon-warning-sign text-muted"></i> </label>
+						<label class="btn btn-default">
+							<input type="radio" name="iconselect" id="icon-3" value="glyphicon-check">
+							<i class="glyphicon glyphicon-check text-muted"></i> </label>
+						<label class="btn btn-default">
+							<input type="radio" name="iconselect" id="icon-4" value="glyphicon-user">
+							<i class="glyphicon glyphicon-user text-muted"></i> </label>
+						<label class="btn btn-default">
+							<input type="radio" name="iconselect" id="icon-5" value="glyphicon-lock">
+							<i class="glyphicon glyphicon-lock text-muted"></i> </label>
+						<label class="btn btn-default">
+							<input type="radio" name="iconselect" id="icon-6" value="glyphicon-time">
+							<i class="glyphicon glyphicon-time text-muted"></i> </label>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>标题</label>
+					<input class="form-control"  id="title" name="title" maxlength="40" type="text" placeholder="">
+				</div>
+				<div class="form-group">
+					<label>时间</label>
+					<input class="form-control"  id="range" name="range" maxlength="40" type="text" placeholder="">
+					<input type="hidden" id="start"/>
+					<input type="hidden" id="end"/>
+				</div>
+				<div class="form-group">
+					<label>备注</label>
+					<textarea class="form-control" placeholder="" rows="3" maxlength="40" id="description"></textarea>
+					<p class="note">最大长度为40个字符。</p>
+				</div>
+
+				<div class="form-group">
+					<label>选择标记颜色</label>
+					<div class="btn-group btn-group-justified btn-select-tick" data-toggle="buttons">
+						<label class="btn bg-color-darken active">
+							<input type="radio" name="priority" id="option1" value="bg-color-darken txt-color-white" checked>
+							<i class="glyphicon glyphicon-ok txt-color-white"></i> </label>
+						<label class="btn bg-color-blue">
+							<input type="radio" name="priority" id="option2" value="bg-color-blue txt-color-white">
+							<i class="glyphicon glyphicon-ok txt-color-white"></i> </label>
+						<label class="btn bg-color-orange">
+							<input type="radio" name="priority" id="option3" value="bg-color-orange txt-color-white">
+							<i class="glyphicon glyphicon-ok txt-color-white"></i> </label>
+						<label class="btn bg-color-greenLight">
+							<input type="radio" name="priority" id="option4" value="bg-color-greenLight txt-color-white">
+							<i class="glyphicon glyphicon-ok txt-color-white"></i> </label>
+						<label class="btn bg-color-blueLight">
+							<input type="radio" name="priority" id="option5" value="bg-color-blueLight txt-color-white">
+							<i class="glyphicon glyphicon-ok txt-color-white"></i> </label>
+						<label class="btn bg-color-red">
+							<input type="radio" name="priority" id="option6" value="bg-color-red txt-color-white">
+							<i class="glyphicon glyphicon-ok txt-color-white"></i> </label>
+					</div>
+				</div>
+
+			</fieldset>
+		</form>
+
+      </div>
+      <div class="modal-footer">
+      	<div class="dropdown pull-left">
+		  <button id="dLabel" type="button" class="btn btn-warning" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    删除
+		    <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu panel-body" aria-labelledby="dLabel">
+		    <p>确定要删除吗？</p>
+      		<button type="button" class="btn btn-primary pull-left" id="btnDelete">确定</button>
+      		<a class="btn btn-default" data-dismiss="dropdown">取消</a>
+		  </ul>
+		</div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="btnSubmit" data-loading-text="Loading..." autocomplete="off">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+
+	<div class="col-sm-12 col-md-12 col-lg-12">
+
+		<div class="panel panel-default"> 
+        	<div class="panel-heading">我的日程</div>
+        	<div class="panel-body">
+				<div id="calendar"></div>
+			</div>
+			<!-- end widget div -->
+		</div>
+		<!-- end widget -->
+
+	</div>
+
+</div>
+<link rel="stylesheet" type="text/css" href="/stylesheets/fullcalendar.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/daterangepicker.css">
+<script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.min.js"></script>
+<script type="text/javascript" src="/javascripts/fullcalendar/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="/javascripts/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript" src="/javascripts/daterangepicker.js"></script>
+<script type="text/javascript">
+	moment.locale('zh-cn');
+	$.fullCalendar.lang("zh-cn", {
+		buttonText: {
+			month: "月",
+			week: "周",
+			day: "日",
+			list: "日程",
+			today:"今天"
+		},
+		allDayText: "全天",
+		eventLimitText: function(n) {
+			return "另外 " + n + " 个";
+		}
+	});
+	// pagefunction
+	
+	var fullviewcalendar;
+
+	var pagefunction = function() {
+		
+		// full calendar
+		
+		var date = new Date();
+	    var d = date.getDate();
+	    var m = date.getMonth();
+	    var y = date.getFullYear();
+		var initDateRange = function(start,end){
+
+			//加载DATERANGEPICKER，日期范围控件
+			var rangepicker = $('#range').daterangepicker({
+				"timePicker24Hour": true,
+			    "timePickerIncrement": 1,
+			    "timePickerSeconds": true,
+			    "autoApply": true,
+				"start": start,
+				"end": end,
+				"locale":{
+					format:"YYYY-MM-DD HH:mm:ss"
+				},
+			    "timePicker": true
+			}, function(start, end, label) {
+			  $("#start").val(start.format("YYYY-MM-DD HH:mm:ss"));
+			  $("#end").val(end.format("YYYY-MM-DD HH:mm:ss"));
+			  //console.log('New date range selected: ' + start.format('YYYY-MM-DD HH:mm:ss') + ' to ' + end.format('YYYY-MM-DD HH:mm:ss') + ' (predefined range: ' + label + ')');
+			});
+			$("#start").val(start.format("YYYY-MM-DD HH:mm:ss"));
+			$("#end").val(end.format("YYYY-MM-DD HH:mm:ss"));
+		}
+		initDateRange(new Date(date.format("YYYY/MM/DD 00:00:00")), new Date(date.format("YYYY/MM/DD 23:59:59")));
+
+	    var hdr = {
+			left: 'prev,next today',
+			center: 'title',
+			right: 'month,basicWeek,basicDay'
+		};
+	    /* initialize the calendar
+		 -----------------------------------------------------------------*/
+		var updateEvent;
+		var rebind = function(){
+			$.get("/calendar/list", function(data){
+
+				for(var i in data){
+					data[i]
+				}
+			    fullviewcalendar = $('#calendar').fullCalendar({
+			
+			        header: hdr,
+			       	/* buttonText: {
+			            prev: '<span class="glyphicon glyphicon-chevron-left"></span>',
+			            next: '<span class="glyphicon glyphicon-chevron-right"></span>'
+			        },
+					*/
+					lang:"zh-cn",
+			        editable: false,
+			        droppable: false, // this allows things to be dropped onto the calendar !!!
+					eventClick: function(calEvent, jsEvent, view) {
+			            $("#btnDelete").show();
+			            $("#uuid").val(calEvent.uuid);
+			            $("#description").val(calEvent.description);
+			            $("#title").val(calEvent.title);
+			            $("input[name=iconselect][value="+calEvent.icon+"]").prop("checked",true).parent().addClass("active").siblings().removeClass("active");
+			            $("input[name=priority][value~="+calEvent.className[1]+"]").prop("checked",true).parent().addClass("active").siblings().removeClass("active");
+			            $("#range").val(calEvent.start._i.replace(/\//g,"-")+" - "+calEvent.end._i.replace(/\//g,"-"));
+			        	$("#start").val(calEvent.start._i.replace(/\//g,"-")),$("#end").val(calEvent.end._i.replace(/\//g,"-"));
+			        	$("#editModal").modal("show");
+			        	updateEvent = calEvent;
+			        },
+			        dayClick: function(calEvent){
+			        	updateEvent = null;
+			        	$("#add-event-form").get(0).reset();
+			        	$("#btnDelete").hide();
+			        	//将日期设置为点击的当天
+			        	var start = new Date(calEvent._d.format("YYYY/MM/DD 00:00:00")),end = new Date(calEvent._d.format("YYYY/MM/DD 23:59:59"));
+			        	$("#range").val(start.format("YYYY-MM-DD HH:mm:ss")+" - "+end.format("YYYY-MM-DD HH:mm:ss"));
+			        	$("#start").val(start.format("YYYY-MM-DD HH:mm:ss")),$("#end").val(end.format("YYYY-MM-DD HH:mm:ss"));
+			        	$("input[name=iconselect][value=1]").prop("checked",true).parent().addClass("active").siblings().removeClass("active");
+			            $("input[name=priority][value=1]").prop("checked",true).parent().addClass("active").siblings().removeClass("active");
+			        	$("#editModal").modal("show");
+			        },
+			        select: function (start, end, allDay) {
+			            var title = prompt('Event Title:');
+			            if (title) {
+			                calendar.fullCalendar('renderEvent', {
+			                        title: title,
+			                        start: start,
+			                        end: end,
+			                        allDay: allDay
+			                    }, true // make the event "stick"
+			                );
+			            }
+			            calendar.fullCalendar('unselect');
+			        },
+					displayEventEnd: true,
+					timeFormat:"MM-DD HH:mm",
+			        events: data,
+			
+			        eventRender: function (event, element, icon) {
+			            if (!event.description == "") {
+			                element.find('.fc-title').append("<br/><span class='ultra-light'>" + event.description +
+			                    "</span>");
+			            }
+			            if (!event.icon == "") {
+			                element.find('.fc-title').append("<i class='air air-top-right glyphicon " + event.icon +
+			                    " '></i>");
+			            }
+			        },
+			
+			        windowResize: function (event, ui) {
+			            $('#calendar').fullCalendar('render');
+			        }
+			    });
+			});
+		}
+		rebind();
+		var saveEvent = function(event, callback){
+			var url = "/calendar/save";
+			$.post(url,event, function(data){
+				if(callback){callback(data);}
+			});
+		}
+		var $calendar = $('#calendar');
+		//确定添加事件
+		$("#btnSubmit").on("click", function(){
+			$("#btnSubmit").prop("disabled",true);
+			var $form = $("#add-event-form");
+			var event = {
+				uuid: $("#uuid").val(),
+				title: $("#title").val(),
+				description: $("#description").val(),
+				start: $("#start").val().replace(/-/g,"/"),
+				end: $("#end").val().replace(/-/g,"/"),
+				icon: $("input[name=iconselect]:checked").val(),
+				className: ["event",$("input[name=priority]:checked").val().split(" ")[0]]
+			};
+			saveEvent(event, function(data){
+				$("#btnSubmit").prop("disabled",false);
+				if(updateEvent){
+					$calendar.fullCalendar("removeEvents", [updateEvent._id]);
+				}
+				$calendar.fullCalendar("gotoDate", new Date(data.start));
+				location.reload();
+				$("#editModal").modal("hide");
+			});
+		});
+		/*删除*/
+		$("#btnDelete").click(function(){
+	    	var uuid = $("#uuid").val();
+	    	if(uuid){
+	    		$(this).prop("disabled",true); $("#editModal").modal("hide");
+				$.get("/calendar/d/"+uuid,function(data){
+					$(this).prop("disabled",false);
+					$calendar.fullCalendar("removeEvents",[updateEvent._id]);
+				});
+	    	}
+	    })
+	};
+	
+	pagefunction();
+
+
+</script>

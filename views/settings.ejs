@@ -1,0 +1,116 @@
+<style>  
+  div.preview{overflow:hidden;margin:auto;border-radius: 50%;}  
+  div.p_photo_l{width:202px;height:152px;}  
+  div.p_photo_m{width:52px;height:52px;overflow: hidden;}  
+  div.p_photo_s{width:32px;height:32px;overflow: hidden;}
+  div.cropper{height:394px;}
+  figcaption{text-align: center;margin:10px 0;}
+</style>  
+<!--主体内容开始-->  
+<article class="w">  
+  <div class="row clearfix">
+    <section class="col-md-7 upload">
+      <div class="panel panel-default">
+        <div class="panel-heading">选择头像区域 <span class="pl20px">请使用鼠标左键拖动的选择框，选择你想要的理想区域。</span>
+        </div>
+        <div class="panel-body">
+          
+          <div class="cropper"><img id='img_origin' src="/upload/Penguins.jpg"/> </div>
+          <form id='coordinates_form' action="/u/settings/crop" method="post">  
+            <input type='hidden' id='dataX' name='dataX' class='x' value='0'/>
+            <input type='hidden' id='dataY' name='dataY' class='y' value='0'/> 
+            <input type='hidden' id='dataHeight' name='dataHeight' class='w' value='0'/>
+            <input type='hidden' id='dataWidth' name='dataWidth' class='h' value='0'/>
+            <input type='hidden' id='dataRotate' name='dataRotate' class='h' value='0'/>
+            <input type="hidden" id='dataImg' name="dataImg" value="/upload/Penguins.jpg">
+          </form>
+        </div>
+      </div>
+    </section>  
+    <aside class="col-md-5">
+      <div class="panel panel-default"> 
+        <div class="panel-heading">预览</div>
+        <div class="panel-body">
+          <figure >  
+            <div class='preview preview-sm p_photo_m'><img src="/upload/Penguins.jpg" class="nophoto_m"/></div>  
+            <figcaption>50×50</figcaption>  
+          </figure>  
+          <figure>  
+            <div class='preview preview-xs p_photo_s'><img src="/upload/Penguins.jpg" class="nophoto_s"/></div>  
+            <figcaption>30×30</figcaption>  
+          </figure>
+          &nbsp;
+          <a href="javascript:;" id="btnSave" class="btn btn-primary">保存</a>
+          
+          <a id="fileuploader"></a>
+          <div class="alert alert-info" role="alert">
+            <p><b>提示:</b></p>
+            <p>
+              <ol>
+                <li>选择图片</li>
+                <li>选择图片区域</li>
+                <li>点击“保存”按钮</li>
+                <li>重新登录</li>
+              </ol>
+            </p>
+          </div>
+      </div>
+    </div>
+    </aside>  
+  </div>  
+</article>
+<link  href="/javascripts/cropper/cropper.css" rel="stylesheet">
+<link rel="stylesheet" href="/stylesheets/uploadfile.css"/>
+<script src="/javascripts/cropper/cropper.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.form.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.uploadfile.min.js"></script>
+<!--主体内容结束-->  
+<script type="text/javascript">
+  $(function(){
+    /**
+      图片裁切
+    */
+    var image = document.getElementById("img_origin"),
+    $dataX = $("#dataX"),
+    $dataY = $("#dataY"),
+    $dataHeight = $("#dataHeight"),
+    $dataWidth = $("#dataWidth"),
+    $dataRotate = $("#dataRotate");
+    var cropper = new Cropper(image, {
+      aspectRatio: 9 / 9,
+      preview: ".preview",
+      maxWidth:820,
+      crop: function(e) {
+        var data = e.detail;
+
+        $dataX.val(data.x);
+        $dataY.val(data.y);
+        $dataHeight.val(data.height);
+        $dataWidth.val(data.width);
+        $dataRotate.val(data.rotate);
+      }
+    });
+    $("#btnSave").click(function(){
+      $("#coordinates_form").submit();
+    });
+    /**
+      上传文件
+    */
+    var upload = $("#fileuploader").uploadFile({
+      url:"/u/upload_json",
+      multiple:false,
+      dragDrop:false,
+      maxFileCount:1,
+      fileName:"imgFile",
+      uploadStr:"选择图片",
+      acceptFiles:"image/*",
+      onSuccess:function(files,data,xhr,pd){
+        var url = data.url;
+        $("#dataImg").val(url);
+        cropper.replace(url);
+        upload.reset();
+      }
+    });
+  });
+  
+</script>

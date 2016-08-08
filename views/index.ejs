@@ -1,0 +1,28 @@
+<% if (!user) { %>
+<div class="hero-unit">
+<h1>欢迎来到 Microblog</h1>
+<p>Microblog 是一个基于 Node.js 的微博系统。</p>
+<p>
+<a class="btn btn-primary btn-large" href="/login">登录</a>
+<a class="btn btn-large" href="/reg">立即注册</a>
+</p>
+</div>
+<% } else { %>
+	<!-- <a class="btn btn-primary" href="/say">发表</a> -->
+<% } %>
+
+<% posts.forEach(function(post, index) {
+if (index % 3 == 0) { %>
+<div class="row">
+<%} %>
+<div class="span3">
+	<h2><a href="/showb/<%= post.uuid %>"><%= post.post %></a></h2>
+	<p><small><%= post.user %>  - <%= post.time.toLocaleDateString() %></small></p>
+</div>
+<% if (index % 3 == 2) { %>
+</div><!-- end row -->
+<% } %>
+<%}) %>
+<% if (posts.length % 3 != 0) { %>
+</div><!-- end row -->
+<%} %>

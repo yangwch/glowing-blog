@@ -1,0 +1,90 @@
+<div class="spy">
+
+	<div id="nav2" data-target="nav1">
+		<h3 id="n1">表格转柱状图</h3>
+		<div class="row">
+			<div class="col-md-5">
+				<table id="hdataTable" class="table table-striped" data-graph-container=".highchartgraph" data-graph-type="column">
+					<thead>
+						<tr>
+							<th>月份</th>
+							<th>销量</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>一月</td>
+							<td>8000</td>
+						</tr>
+						<tr>
+							<td>二月</td>
+							<td>7000</td>
+						</tr>
+						<tr>
+							<td>三月</td>
+							<td>9000</td>
+						</tr>
+						<tr>
+							<td>四月</td>
+							<td>5000</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-7">
+				<div class="highchartgraph"></div>
+			</div>
+		</div>
+		<h3 id="n2">混合</h3>
+		<div class="row">
+			<div class="col-md-5">
+				<table id="hdataTable2" class="table table-striped" data-graph-container="#highchartgraph2" data-graph-type="column">
+					<thead>
+						<tr>
+							<th>月份</th>
+							<th>销量</th>
+							<th data-graph-type="area">利润</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>一月</td>
+							<td>8000</td>
+							<td>10000</td>
+						</tr>
+						<tr>
+							<td>二月</td>
+							<td>7000</td>
+							<td>9500</td>
+						</tr>
+						<tr>
+							<td>三月</td>
+							<td>9000</td>
+							<td>12000</td>
+						</tr>
+						<tr>
+							<td>四月</td>
+							<td>5000</td>
+							<td>3000</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-7">
+				<div id="highchartgraph2"></div>
+			</div>
+		</div>
+</div>
+</div>
+<script type="text/javascript" src="/javascripts/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="/javascripts/highcharts/jquery.highchartTable.js"></script>
+<script type="text/javascript" src="/javascripts/highcharts/modules/exporting.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#hdataTable,#hdataTable2").highchartTable();
+		var a = 1;
+		var s = function(c){
+			console.log(a==c);
+		}(a);
+	});
+</script>

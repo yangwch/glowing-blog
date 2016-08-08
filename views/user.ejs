@@ -1,0 +1,70 @@
+
+<% if (user) { %>
+<p class="text-right">
+	<a class="btn btn-primary" href="/say">发表</a>
+</p>
+<% } %>
+<div ng-app="mApp" ng-controller="gridCtrl">
+	<div class="gridStyle" ui-grid="gridOptions" ui-grid-pagination></div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/ui-grid.min.css"/>
+<script type="text/javascript" src="/javascripts/angular.min.js"></script>
+<script type="text/javascript" src="/javascripts/ui-grid.min.js"></script>
+<script type="text/javascript">
+
+	var mApp = angular.module("mApp", ['ui.grid','ui.grid.pagination']);
+	mApp.controller("gridCtrl",  ['$scope', 'i18nService', '$http', function ($scope, i18nService, $http) {
+	    i18nService.setCurrentLang('zh-cn');
+	    $scope.gridOptions = {
+            paginationPageSizes: [10, 15, 30, 50],
+    		paginationPageSize: 15,
+            columnDefs: [
+            	{field:'index', displayName: '序号',width:80}, 
+	            {field:'post', displayName:'标题',cellTemplate:'<div class="ui-grid-cell-contents"><a href="/showb/{{grid.appScope.getRowData(grid,row,\'uuid\')}}">{{grid.appScope.getRowData(grid,row,\'post\')}}</a></div>'},
+	            {field:"uuid", visible:false},
+	            {name:"op",field:'uuid',width:150, displayName:'操作',cellTemplate:'<div class="ui-grid-cell-contents"><a href="/say/{{grid.appScope.getRowData(grid,row,\'uuid\')}}" title="修改" ><span class="glyphicon glyphicon-edit"></span></a>\
+					<a href="/u/d/{{grid.appScope.getRowData(grid,row,\'uuid\')}}" title="删除" ><span class="glyphicon glyphicon-remove-sign"></span></a></div>'}
+            ]
+	    };
+	    $scope.getRowData = function(grid, row, fieldName){
+	    	var value = row.entity[fieldName];
+			return value;
+	    }
+	    $http.post('/u/blogs').success(function (data) {
+	    	var griddata = data.map(function(item, index){
+	    		var i = index+1;
+	    		return $.extend(item,{
+	    			index: i
+	    			/*,
+	    			op: function(uuid){
+	    				return '<a href="/say/'+uuid+'" title="修改" ><span class="glyphicon glyphicon-edit"></span></a>\
+					<a href="/u/d/'+uuid+'" title="删除" ><span class="glyphicon glyphicon-remove-sign"></span></a>';
+	    			}(item.uuid)*/
+	    		});
+	    	});
+	    	$scope.gridOptions.data = griddata;
+		});
+	}]);
+
+</script>
+
+<!-- <table class="table table-hover table-condensed ">
+	<thead>
+		<th>序号</th>
+		<th>标题</th>
+		<th>操作</th>
+	</thead>
+	<tbody>
+		<% posts.forEach(function(post, index) { %>
+			<tr>
+				<td><%= index+1%></td>
+				<td><a href="/showb/<%=post.uuid%>"><%=post.post %></a></td>
+				<td>
+					<a href="/say/<%=post.uuid %>" title="修改" ><span class="glyphicon glyphicon-edit"></span></a>
+					<a href="/u/d/<%=post.uuid %>" title="删除" ><span class="glyphicon glyphicon-remove-sign"></span></a>
+				</td>
+			</tr>
+		<%})%>			
+	</tbody>
+</table> -->

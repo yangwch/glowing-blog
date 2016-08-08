@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= title %> - Microblog</title>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Microblog</a>
+			</div>
+			<div class="collapse navbar-collapse pull-left">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="/">首页</a></li>
+						<% if(locals.user){ %>
+						<li><a href='/u'>我的发言</a></li>
+                        <li><a href='/calendar'>我的日程</a></li>
+						<li><a href="/logout">登出</a></li>
+						<li><a><%= locals.user.name %></a></li>
+						<% } else{ %>
+						<li><a href="/login">登入</a></li> 
+						<li><a href="/reg">注册</a></li>
+						<% } %>
+					</ul>
+			</div>
+			<div class="menu-extras">
+
+                <ul class="nav navbar-nav navbar-right pull-right">
+                    <li>
+                        <form role="search" class="navbar-left app-search pull-left hidden-xs">
+                             <input type="text" placeholder="查找..." class="form-control">
+                             <a href=""><i class="glyphicon glyphicon-search"></i></a>
+                        </form>
+                    </li>
+                    <li>
+                        <!-- Notification -->
+                        <div class="notification-box">
+                            <ul class="list-inline m-b-0">
+                                <li>
+                                    <a href="javascript:void(0);" class="right-bar-toggle">
+                                        <i class="zmdi zmdi-notifications-none"></i>
+                                    </a>
+                                    <div class="noti-dot">
+                                        <span class="dot"></span>
+                                        <span class="pulse"></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- End Notification bar -->
+                    </li>
+
+                    <li class="dropdown user-box">
+                        <a href="" class="dropdown-toggle waves-effect waves-light profile " data-toggle="dropdown" aria-expanded="false">
+                        <% if(locals.user && locals.user.icon){ %>
+                            <img src="<%-locals.user.icon%>" alt="user-img" class="img-circle user-img">
+                        <% }else{ %>
+                            <img src="/upload/Penguins—croped.jpg" alt="user-img" class="img-circle user-img">
+                        <% } %>
+                            <div class="user-status away"><i class="zmdi zmdi-dot-circle"></i></div>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:void(0)"><i class="ti-user m-r-5"></i> 名片</a></li>
+                            <li><a href="/u/settings"><i class="ti-settings m-r-5"></i> 设置</a></li>
+                            <li><a href="/logout"><i class="ti-power-off m-r-5"></i> 登出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="menu-item">
+                    <!-- Mobile menu toggle-->
+                    <a class="navbar-toggle">
+                        <div class="lines">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </a>
+                    <!-- End mobile menu toggle-->
+                </div>
+                    </div>
+		</div>
+		
+	</div>
+	<script type="text/javascript" src="/javascripts/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="/javascripts/bootstrap.js"></script>
+	<div class="container" id="container">
+		<% if (locals.success) { %>
+		<div class="alert alert-success">
+		<%= success %>
+		</div>
+		<% } %>
+		<% if (locals.error) { %>
+		<div class="alert alert-danger">
+		<%= error %>
+		</div>
+		<% } %>
+		<%- body %>
+		<HR>
+	</div>
+	<div class="container">
+		<footer>
+			<p> <a href="http://zhongyuansky.com">Zhongyuan Sky</a> 2016</p>
+		</footer>
+	</div>
+</body>
+</html>
